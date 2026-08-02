@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Ignore local SQLite database
+*.db
+*.sqlite3
+
+# Ignore uploaded PDF notes
+backend/uploads/*
+!backend/uploads/.gitkeep

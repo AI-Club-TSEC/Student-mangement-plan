@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Student Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 14v2m0 0v2m0-2h2m-2 0H10"/>
+                        <path d="M3 12h18M3 12a9 9 0 0118 0 9 9 0 01-18 0z"/>
+                    </svg>
+                </div>
+                <h2>SMS Admin</h2>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="students">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="#" class="nav-item" data-section="notes">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <span>Upload Notes</span>
+                </a>
+                <a href="#" class="nav-item" data-section="announcements">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    <span>Announcements</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Admin</span>
+                        <span class="user-role" id="userRole">admin</span>
+                    </div>
+                </div>
+                <button class="btn btn-logout" id="logoutButton">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1 id="sectionTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-icon mobile-menu-btn" id="mobileMenuBtn">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Dashboard Section -->
+                <section class="section active" id="dashboardSection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon students-icon">
+                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 010 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="studentCount">0</span>
+                                <span class="stat-label">Total Students</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon notes-icon">
+                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="noteCount">0</span>
+                                <span class="stat-label">Uploaded Notes</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon announcements-icon">
+                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="announcementCount">0</span>
+                                <span class="stat-label">Announcements</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Section -->
+                <section class="section" id="studentsSection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>All Students</h3>
+                            <button class="btn btn-primary" id="addStudentBtn">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Student
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="studentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Enrollment ID</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentsTableBody">
+                                        <tr>
+                                            <td colspan="6" class="empty-table">No students found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Upload Notes Section -->
+                <section class="section" id="notesSection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Upload New Note</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="uploadNoteForm" class="upload-form">
+                                <div class="form-group">
+                                    <label for="noteTitle">Note Title</label>
+                                    <input type="text" id="noteTitle" placeholder="Enter note title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="noteSubject">Subject</label>
+                                    <input type="text" id="noteSubject" placeholder="Enter subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="noteFile">PDF File</label>
+                                    <input type="file" id="noteFile" accept=".pdf" required>
+                                </div>
+                                <div class="form-message" id="uploadMessage" style="display: none;"></div>
+                                <button type="submit" class="btn btn-primary" id="uploadButton">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    Upload Note
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Uploaded Notes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="notes-grid" id="allNotes">
+                                <div class="empty-state">
+                                    <p>No notes uploaded yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Announcements Section -->
+                <section class="section" id="announcementsSection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Create Announcement</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="announcementForm" class="upload-form">
+                                <div class="form-group">
+                                    <label for="annTitle">Title</label>
+                                    <input type="text" id="annTitle" placeholder="Enter announcement title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="annContent">Content</label>
+                                    <textarea id="annContent" rows="4" placeholder="Enter announcement content" required></textarea>
+                                </div>
+                                <div class="form-message" id="announcementMessage" style="display: none;"></div>
+                                <button type="submit" class="btn btn-primary">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    Post Announcement
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>All Announcements</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="announcement-list" id="allAnnouncements">
+                                <div class="empty-state">
+                                    <p>No announcements yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Add Student Modal -->
+                <div class="modal-overlay" id="studentModal" style="display: none;">
+                    <div class="modal">
+                        <div class="modal-header">
+                            <h3 id="modalTitle">Add Student</h3>
+                            <button class="modal-close" id="closeModal">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="studentForm">
+                                <input type="hidden" id="editStudentId">
+                                <div class="form-group">
+                                    <label for="studentName">Full Name</label>
+                                    <input type="text" id="studentName" placeholder="Enter full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentEmail">Email</label>
+                                    <input type="email" id="studentEmail" placeholder="Enter email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentEnrollment">Enrollment ID (optional)</label>
+                                    <input type="text" id="studentEnrollment" placeholder="Enter enrollment ID">
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentPassword">Password</label>
+                                    <input type="password" id="studentPassword" placeholder="Enter password" required>
+                                </div>
+                                <div class="form-message" id="studentFormMessage" style="display: none;"></div>
+                                <button type="submit" class="btn btn-primary btn-block" id="saveStudentBtn">Save Student</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

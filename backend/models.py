@@ -10,12 +10,11 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    enrollment_id = Column(String, nullable=True)         # NULL for admin
+    enrollment_id = Column(String, nullable=True)
     hashed_password = Column(String, nullable=False)
-    role = Column(String, nullable=False, default="student")  # "admin" or "student"
+    role = Column(String, nullable=False, default="student")
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
     notes_uploaded = relationship("Note", back_populates="uploader")
     announcements_made = relationship("Announcement", back_populates="creator")
 
@@ -25,8 +24,8 @@ class Note(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     subject = Column(String, nullable=False)
-    file_path = Column(String, nullable=False)            # e.g., "notes/uuid.pdf"
-    file_url = Column(String, nullable=False)             # e.g., "/uploads/notes/uuid.pdf"
+    file_path = Column(String, nullable=False)
+    file_url = Column(String, nullable=False)
     uploaded_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -42,3 +41,13 @@ class Announcement(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     creator = relationship("User", back_populates="announcements_made")
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    date = Column(DateTime, default=datetime.utcnow)
+    status = Column(String, nullable=False, default="present")
+
+    student = relationship("User")

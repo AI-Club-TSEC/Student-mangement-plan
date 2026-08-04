@@ -5,11 +5,19 @@ from typing import List
 
 from database import get_db
 from models import User, Note, Announcement
+from models import User, Note, Announcement, Attendance  # Add Attendance
 from schemas import (
     StudentCreate, StudentUpdate, StudentOut,
     NoteOut, AnnouncementCreate, AnnouncementOut
 )
 from auth import require_admin, get_password_hash
+from schemas import (
+    StudentCreate, StudentUpdate, StudentOut,
+    NoteOut, AnnouncementCreate, AnnouncementOut,
+    AttendanceCreate, AttendanceRecord, AttendanceReport  # Add these
+)
+
+from datetime import datetime  # Add this if not already there
 
 router = APIRouter(dependencies=[Depends(require_admin)])
 
@@ -117,3 +125,93 @@ def create_announcement(
     db.commit()
     db.refresh(new_ann)
     return new_ann
+
+# ---------- Attendance Management ----------
+@router.post("/attendance", status_code=201)
+def mark_attendance(
+    attendance_data: AttendanceCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Mark attendance for a student."""
+    # Check if student exists
+    student = db.query(User).filter(User.id == attendance_data.student_id, User.role == "student").first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Check if attendance already marked for today
+    today = datetime.utcnow().date()
+    existing = db.query(Attendance).filter(
+        Attendance.student_id == attendance_data.student_id,
+        Attendance.date >= today
+    ).first()
+    
+    if existing:
+        # Update existing attendance
+        existing.status = attendance_data.status
+        db.commit()
+        return {"message": "Attendance updated successfully"}
+    
+    # Create new attendance record
+    attendance = Attendance(
+        student_id=attendance_data.student_id,
+        status=attendance_data.status
+    )
+    db.add(attendance)
+    db.commit()
+    return {"message": "Attendance marked successfully"}
+
+@router.get("/attendance/today", response_model=List[AttendanceRecord])
+def get_today_attendance(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Get attendance for all students today."""
+    today = datetime.utcnow().date()
+    students = db.query(User).filter(User.role == "student").all()
+    
+    records = []
+    for student in students:
+        attendance = db.query(Attendance).filter(
+            Attendance.student_id == student.id,
+            Attendance.date >= today
+        ).first()
+        
+        records.append({
+            "student_id": student.id,
+            "student_name": student.full_name,
+            "enrollment_id": student.enrollment_id,
+            "status": attendance.status if attendance else "not_marked"
+        })
+    
+    return records
+
+@router.get("/attendance/report", response_model=List[AttendanceReport])
+def get_attendance_report(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Get attendance report for all students."""
+    students = db.query(User).filter(User.role == "student").all()
+    
+    reports = []
+    for student in students:
+        total = db.query(Attendance).filter(Attendance.student_id == student.id).count()
+        present = db.query(Attendance).filter(
+            Attendance.student_id == student.id,
+            Attendance.status == "present"
+        ).count()
+        absent = total - present
+        percentage = (present / total * 100) if total > 0 else 0
+        
+        reports.append({
+            "student_id": student.id,
+            "student_name": student.full_name,
+            "enrollment_id": student.enrollment_id,
+            "total_days": total,
+            "present_days": present,
+            "absent_days": absent,
+            "percentage": round(percentage, 2)
+        })
+    
+    return reports

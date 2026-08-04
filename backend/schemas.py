@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
 from datetime import datetime
 
-# ---- Auth ----
+# ---------- Auth ----------
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -12,7 +12,7 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     role: str
 
-# ---- Student (Admin creates / updates) ----
+# ---------- Student ----------
 class StudentCreate(BaseModel):
     full_name: str
     email: EmailStr
@@ -33,10 +33,9 @@ class StudentOut(BaseModel):
     role: str
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
-# ---- Notes ----
+# ---------- Notes ----------
 class NoteOut(BaseModel):
     id: int
     title: str
@@ -45,10 +44,9 @@ class NoteOut(BaseModel):
     uploaded_by: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
-# ---- Announcements ----
+# ---------- Announcements ----------
 class AnnouncementCreate(BaseModel):
     title: str
     content: str
@@ -60,5 +58,32 @@ class AnnouncementOut(BaseModel):
     created_by: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+
+# ---------- Attendance ----------
+class AttendanceCreate(BaseModel):
+    student_id: int
+    status: str
+
+class AttendanceOut(BaseModel):
+    id: int
+    student_id: int
+    date: datetime
+    status: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class AttendanceRecord(BaseModel):
+    student_id: int
+    student_name: str
+    enrollment_id: Optional[str]
+    status: str
+
+class AttendanceReport(BaseModel):
+    student_id: int
+    student_name: str
+    enrollment_id: Optional[str]
+    total_days: int
+    present_days: int
+    absent_days: int
+    percentage: float
